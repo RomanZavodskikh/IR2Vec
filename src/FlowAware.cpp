@@ -24,6 +24,7 @@
 #include <cxxabi.h>
 #include <functional>
 #include <regex>
+#include <iostream>
 
 using namespace llvm;
 using namespace IR2Vec;
@@ -165,7 +166,7 @@ void IR2Vec_FA::generateFlowAwareEncodings(std::ostream *o,
             status == 0 ? std::string(readable_name) : funcName;
         res += M.getSourceFileName() + "__" + demangledName + "\t";
 
-        res += "=\t";
+        res += "\t";
         for (auto i : tmp) {
           if ((i <= 0.0001 && i > 0) || (i < 0 && i >= -0.0001)) {
             i = 0;
@@ -1185,6 +1186,43 @@ void IR2Vec_FA::inst2Vec(
   Vector instVector(DIM, 0);
   StringRef opcodeName = I.getOpcodeName();
   auto vec = getValue(opcodeName.str());
+  if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "0") {
+        vec = getValue("add0VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "1") {
+        vec = getValue("add1VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "2") {
+        vec = getValue("add2VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "3") {
+        vec = getValue("add3VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "4") {
+        vec = getValue("add4VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "5") {
+        vec = getValue("add5VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "6") {
+        vec = getValue("add6VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "7") {
+        vec = getValue("add7VirtCmd");
+  } else if (I.getNumOperands() == 2 && opcodeName == "add" &&
+      dyn_cast<ConstantInt>(I.getOperand(0))->getValue().toString(10, true) == "0" &&
+      dyn_cast<ConstantInt>(I.getOperand(1))->getValue().toString(10, true) == "8") {
+        vec = getValue("add8VirtCmd");
+  }
   IR2VEC_DEBUG(I.print(outs()); outs() << "\n");
   std::transform(instVector.begin(), instVector.end(), vec.begin(),
                  instVector.begin(), std::plus<double>());
